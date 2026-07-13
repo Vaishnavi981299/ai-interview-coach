@@ -1,6 +1,6 @@
 import axios from 'axios';
 const API = axios.create({
-    baseURL: 'http://localhost:5001/api'
+    baseURL: ' https://ai-interview-coach-backend-jmhb.onrender.com/api'
 });
 API.interceptors.request.use((config) => {
     const token = localStorage.getItem('token');
