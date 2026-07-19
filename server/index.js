@@ -8,8 +8,7 @@ const interviewRoutes = require('./routes/interview');
 connectDB();
 const app = express();
 app.use(cors({
-	origin: 'https://ai-interview-coach-cgo4hm3cv.vercel.app',
-	credentials: true
+	origin: '*'
 }));
 app.use(express.json());
 app.use('/api/interview/', interviewRoutes);

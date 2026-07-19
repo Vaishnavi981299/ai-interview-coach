@@ -1,10 +1,12 @@
 const Groq = require('groq-sdk');
 const client = new Groq({apiKey: process.env.GROQ_API_KEY});
-async function getNextQuestion(messages, type, difficulty){
+async function getNextQuestion(messages, type, difficulty, resumeText = null){
     try{
+        const resumeContext = resumeText ? `\n\nCandidate's Resume:\n${resumeText}\n\nBase your questions specifically on their projects, skills, and experience mentioned in the resume. Cross-question them on anything they claim to have built or know.`
+        : '';
         const systemPrompt = `You are an expert technical interviewer conducting a ${type} interview.
     Current difficulty level: ${difficulty}/5.
-
+    ${resumeContext}
     After each user answer, respond in EXACTLY this format:
     EVALUATION: [score 1-5, or 0 if this is the first question]
     FEEDBACK: [one line of constructive feedback, skip if first question]
