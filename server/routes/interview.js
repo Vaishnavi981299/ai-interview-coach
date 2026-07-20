@@ -67,7 +67,7 @@ router.post('/resume', getToken, upload.single('resume'), async(req, res) => {
         });
         await session.save();
         res.status(201).json({ session });
-    }} catch(error) {
+    } catch(error) {
     console.error('Resume route error:', error);
     res.status(500).json({ message: error.message });
 }
