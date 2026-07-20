@@ -31,57 +31,67 @@ function Dashboard(){
                 setUploading(false);
             }
         }
-    return(
-        <div className="min-h-screen bg-gray-100 p-8">
-            <h1 className="text-3xl font-bold text-center mb-8">Choose Interview Type</h1>
-            <div className="flex justify-center gap-6">
-                {['Technical', 'HR', 'System Design'].map((type) => (
+    return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
+        <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+                <h1 className="text-4xl font-bold text-gray-800 mb-2">AI Interview Coach</h1>
+                <p className="text-gray-500 text-lg">Choose your interview type to get started</p>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+                {[
+                    { type: 'Technical', icon: '💻', desc: 'DSA, coding concepts & problem solving' },
+                    { type: 'HR', icon: '🤝', desc: 'Behavioral & situational questions' },
+                    { type: 'System Design', icon: '🏗️', desc: 'Architecture & scalability discussions' },
+                ].map(({ type, icon, desc }) => (
                     <div
                         key={type}
                         onClick={() => handleStart(type)}
-                        className="bg-white p-8 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition w-48 text-center"
+                        className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md cursor-pointer transition border border-gray-100 hover:border-blue-200"
                     >
-                        <h2 className="text-xl font-semibold">{type}</h2>
-                        <p className="text-gray-500 mt-2">Start {type} Interview</p>
+                        <div className="text-4xl mb-4">{icon}</div>
+                        <h2 className="text-xl font-bold text-gray-800 mb-2">{type}</h2>
+                        <p className="text-gray-500 text-sm">{desc}</p>
                     </div>
                 ))}
+                <div
+                    onClick={() => setShowUpload(true)}
+                    className="bg-gradient-to-br from-blue-600 to-indigo-600 p-8 rounded-2xl shadow-sm hover:shadow-md cursor-pointer transition text-white"
+                >
+                    <div className="text-4xl mb-4">📄</div>
+                    <h2 className="text-xl font-bold mb-2">Resume Based</h2>
+                    <p className="text-blue-100 text-sm">Upload your resume for personalized questions</p>
+                </div>
             </div>
-            <div className="flex justify-center gap-6">
-                    <div
-                        onClick={() => setShowUpload(true)}
-                        className="bg-blue-600 text-white p-8 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition w-48 text-center mt-6 mx-auto"
+        </div>
+        {showUpload && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                <div className="bg-white p-8 rounded-2xl shadow-lg w-96">
+                    <h2 className="text-xl font-bold mb-2">Upload Your Resume</h2>
+                    <p className="text-gray-500 text-sm mb-4">PDF format only, max 5MB</p>
+                    <input
+                        type="file"
+                        accept=".pdf"
+                        onChange={(e) => setFile(e.target.files[0])}
+                        className="w-full border p-2 rounded-lg mb-4"
+                    />
+                    <button
+                        onClick={handleResumeStart}
+                        disabled={!file || uploading}
+                        className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 mb-2 font-semibold"
                     >
-                        <h2 className="text-xl font-semibold">Resume Based</h2>
-                        <p className="text-gray-500 mt-2">Upload resume & start interview</p>
-                    </div>
+                        {uploading ? 'Analyzing resume...' : 'Start Interview'}
+                    </button>
+                    <button
+                        onClick={() => setShowUpload(false)}
+                        className="w-full border p-3 rounded-lg hover:bg-gray-50 text-gray-600"
+                    >
+                        Cancel
+                    </button>
+                </div>
             </div>
-            {showUpload && (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-        <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Upload Your Resume</h2>
-            <input
-                type="file"
-                accept=".pdf"
-                onChange={(e) => setFile(e.target.files[0])}
-                className="w-full border p-2 rounded mb-4"
-            />
-            <button
-                onClick={handleResumeStart}
-                disabled={!file || uploading}
-                className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 disabled:opacity-50 mb-2"
-            >
-                {uploading ? 'Uploading...' : 'Start Interview'}
-            </button>
-            <button
-                onClick={() => setShowUpload(false)}
-                className="w-full border p-2 rounded hover:bg-gray-100"
-            >
-                Cancel
-            </button>
-        </div>
+        )}
     </div>
-)}
-        </div>
-    )
+)
 }
 export default Dashboard
