@@ -5,6 +5,8 @@ function Interview(){
     const [messages, setMessages] = useState([]);
     const [answer, setAnswer] = useState('');
     const [loading, setLoading] = useState(false);
+    const [isListening, setIsListening] = useState(false);
+const [recognition, setRecognition] = useState(null);
     const navigate = useNavigate();
     useEffect(() => {
         async function fetchSession(){
@@ -30,6 +32,36 @@ function Interview(){
     async function handleEndInterview(){
         navigate('/results');
     }
+    function startListening() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        alert('Speech recognition is not supported in your browser. Please use Chrome.');
+        return;
+    }
+    const rec = new SpeechRecognition();
+    rec.continuous = true;
+    rec.interimResults = true;
+    rec.lang = 'en-US';
+    
+    rec.onresult = (event) => {
+        const transcript = Array.from(event.results)
+            .map(result => result[0].transcript)
+            .join('');
+        setAnswer(transcript);
+    };
+    
+    rec.onend = () => setIsListening(false);
+    rec.start();
+    setRecognition(rec);
+    setIsListening(true);
+}
+
+function stopListening() {
+    if (recognition) {
+        recognition.stop();
+    }
+    setIsListening(false);
+}
     function parseAIMessage(content){
         const feedbackMatch = content.match(/FEEDBACK: \s*(.+?)(?=QUESTION:|$)/s);
         const questionMatch = content.match(/QUESTION:\s*(.+?)(?=DIFFICULTY:|$)/s);
@@ -74,22 +106,28 @@ function Interview(){
                     </div>
                 ))}
         </div>
-        <div className="bg-white p-4 flex gap-4">
-        <textarea
-            className="flex-1 border rounded p-2 resize-none"
-            rows="3"
-            placeholder="Type your answer..."
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
-        />
-        <button
-            onClick={handleSubmit}
-            disabled={loading}
-            className="bg-blue-600 text-white px-6 rounded hover:bg-blue-700 disabled:opacity-50"
-        >
-            {loading ? 'Thinking...' : 'Send'}
-        </button>
-    </div>
+        <div className="bg-white p-4 flex gap-4 items-end">
+    <textarea
+        className="flex-1 border rounded p-2 resize-none"
+        rows="3"
+        placeholder="Type your answer or use the mic..."
+        value={answer}
+        onChange={(e) => setAnswer(e.target.value)}
+    />
+    <button
+        onClick={isListening ? stopListening : startListening}
+        className={`p-3 rounded-lg ${isListening ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-200 hover:bg-gray-300'}`}
+    >
+        {isListening ? '⏹️' : '🎤'}
+    </button>
+    <button
+        onClick={handleSubmit}
+        disabled={loading}
+        className="bg-blue-600 text-white px-6 rounded-lg hover:bg-blue-700 disabled:opacity-50 py-3"
+    >
+        {loading ? 'Thinking...' : 'Send'}
+    </button>
+</div>
 </div>
     )
 }
