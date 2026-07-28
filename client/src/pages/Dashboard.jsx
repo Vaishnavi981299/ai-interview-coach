@@ -7,6 +7,12 @@ function Dashboard(){
         const [showUpload, setShowUpload] = useState(false);
         const [file, setFile] = useState(null);
         const [uploading, setUploading] = useState(false);
+        const [showCompanyModal, setShowCompanyModal] = useState(false);
+const [selectedCompany, setSelectedCompany] = useState('');
+const [selectedType, setSelectedType] = useState('');
+const [step, setStep] = useState(1); // 1=company, 2=type, 3=optional resume
+const [companyFile, setCompanyFile] = useState(null);
+const [companyUploading, setCompanyUploading] = useState(false);
         async function handleStart(type){
             try{
                 const response = await startSession({type});
@@ -31,6 +37,26 @@ function Dashboard(){
                 setUploading(false);
             }
         }
+        async function handleCompanyStart() {
+    try {
+        setCompanyUploading(true);
+        if (companyFile) {
+            const formData = new FormData();
+            formData.append('resume', companyFile);
+            formData.append('company', selectedCompany);
+            const response = await startResumeSession(formData);
+            localStorage.setItem('sessionId', response.data.session._id);
+        } else {
+            const response = await startSession({ type: selectedType, company: selectedCompany });
+            localStorage.setItem('sessionId', response.data.session._id);
+        }
+        navigate('/interview');
+    } catch(error) {
+        console.error('Error starting company interview:', error);
+    } finally {
+        setCompanyUploading(false);
+    }
+}
     return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
         <div className="max-w-4xl mx-auto">
@@ -62,6 +88,14 @@ function Dashboard(){
                     <h2 className="text-xl font-bold mb-2">Resume Based</h2>
                     <p className="text-blue-100 text-sm">Upload your resume for personalized questions</p>
                 </div>
+                <div
+    onClick={() => { setShowCompanyModal(true); setStep(1); }}
+    className="bg-gradient-to-br from-purple-600 to-pink-600 p-8 rounded-2xl shadow-sm hover:shadow-md cursor-pointer transition text-white col-span-2"
+>
+    <div className="text-4xl mb-4">🏢</div>
+    <h2 className="text-xl font-bold mb-2">Company Specific</h2>
+    <p className="text-purple-100 text-sm">Practice for Google, Amazon, Microsoft, TCS & more</p>
+</div>
             </div>
         </div>
         {showUpload && (
@@ -91,6 +125,68 @@ function Dashboard(){
                 </div>
             </div>
         )}
+        {showCompanyModal && (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white p-8 rounded-2xl shadow-lg w-96">
+            {step === 1 && (
+                <>
+                    <h2 className="text-xl font-bold mb-4">Select Company</h2>
+                    <div className="grid grid-cols-2 gap-3 mb-4">
+                        {['Google', 'Amazon', 'Microsoft', 'TCS', 'Infosys', 'Deloitte'].map(company => (
+                            <div
+                                key={company}
+                                onClick={() => { setSelectedCompany(company); setStep(2); }}
+                                className={`p-3 border rounded-lg cursor-pointer text-center hover:border-blue-500 transition ${selectedCompany === company ? 'border-blue-500 bg-blue-50' : ''}`}
+                            >
+                                {company}
+                            </div>
+                        ))}
+                    </div>
+                    <button onClick={() => setShowCompanyModal(false)} className="w-full border p-2 rounded-lg hover:bg-gray-50">Cancel</button>
+                </>
+            )}
+            {step === 2 && (
+                <>
+                    <h2 className="text-xl font-bold mb-1">Interview Type</h2>
+                    <p className="text-gray-500 text-sm mb-4">{selectedCompany} Interview</p>
+                    <div className="space-y-3 mb-4">
+                        {['Technical', 'HR', 'System Design'].map(type => (
+                            <div
+                                key={type}
+                                onClick={() => { setSelectedType(type); setStep(3); }}
+                                className="p-3 border rounded-lg cursor-pointer hover:border-blue-500 transition"
+                            >
+                                {type}
+                            </div>
+                        ))}
+                    </div>
+                    <button onClick={() => setStep(1)} className="w-full border p-2 rounded-lg hover:bg-gray-50">Back</button>
+                </>
+            )}
+            {step === 3 && (
+                <>
+                    <h2 className="text-xl font-bold mb-1">Upload Resume</h2>
+                    <p className="text-gray-500 text-sm mb-4">{selectedCompany} — {selectedType} (optional)</p>
+                    <input
+                        type="file"
+                        accept=".pdf"
+                        onChange={(e) => setCompanyFile(e.target.files[0])}
+                        className="w-full border p-2 rounded-lg mb-4"
+                    />
+                    <button
+                        onClick={handleCompanyStart}
+                        disabled={companyUploading}
+                        className="w-full bg-purple-600 text-white p-3 rounded-lg hover:bg-purple-700 disabled:opacity-50 mb-2 font-semibold"
+                    >
+                        {companyUploading ? 'Starting...' : 'Start Interview'}
+                    </button>
+                    <button onClick={() => setStep(2)} className="w-full border p-2 rounded-lg hover:bg-gray-50">Back</button>
+                </>
+            )}
+        </div>
+    </div>
+)}
+        
     </div>
 )
 }
