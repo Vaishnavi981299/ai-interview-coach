@@ -98,16 +98,32 @@ function stopListening() {
                                }`}
                         >
                             {msg.role === 'ai' ? (
-                                (() => {
-                                    const { feedback, question } = parseAIMessage(msg.content);
-                                    return (
-                                        <>
-                                            {feedback && <p className = "text-sm text-gray-500 mb-2 italic">{feedback}</p>}
-                                            <p>{question}</p>
-                                            </>
-                                    );
-                                })()
-                            ) : msg.content}
+    (() => {
+        const { feedback, modelAnswer, missingConcepts, question } = parseAIMessage(msg.content);
+        return (
+            <>
+                {feedback && <p className="text-sm text-gray-500 mb-2 italic">{feedback}</p>}
+                <p>{question}</p>
+                {modelAnswer && (
+                    <details className="mt-3 border-t pt-3">
+                        <summary className="text-sm text-blue-600 cursor-pointer hover:text-blue-800 font-semibold">
+                            View Model Answer
+                        </summary>
+                        <div className="mt-2">
+                            <p className="text-sm text-gray-700 mb-2">{modelAnswer}</p>
+                            {missingConcepts && (
+                                <div className="mt-2">
+                                    <p className="text-xs font-semibold text-red-500 mb-1">Missing Concepts:</p>
+                                    <p className="text-xs text-red-400">{missingConcepts}</p>
+                                </div>
+                            )}
+                        </div>
+                    </details>
+                )}
+            </>
+        );
+    })()
+) : msg.content}
                         </div>
                     </div>
                 ))}
