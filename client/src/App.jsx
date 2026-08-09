@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard'
 import Interview from './pages/Interview'
 import Results from './pages/Results'
 import Register from './pages/Register'
+import History from './pages/History'
 function App() {
   return (
     <Routes>
@@ -13,6 +14,7 @@ function App() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/interview" element={<Interview />} />
       <Route path="/results" element={<Results />} />
+      <Route path="/history" element={<History />} />
     </Routes>
   )
 }
