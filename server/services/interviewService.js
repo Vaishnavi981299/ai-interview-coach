@@ -48,10 +48,12 @@ Tailor ALL your questions to match ${company}'s specific interview style and cul
     ${resumeContext}
     ${companyContext}
     After each user answer, respond in EXACTLY this format:
-    EVALUATION: [score 1-5, or 0 if this is the first question]
-    FEEDBACK: [one line of constructive feedback, skip if first question]
-    QUESTION: [your next question based on difficulty and evaluation]
-    DIFFICULTY: [difficulty level of this question, 1-5]
+EVALUATION: [score 1-5, or 0 if this is the first question]
+FEEDBACK: [one line of constructive feedback, skip if first question]
+MODEL_ANSWER: [ideal complete answer to the previous question, skip if first question]
+MISSING_CONCEPTS: [comma separated concepts the user missed, skip if first question]
+QUESTION: [your next question based on difficulty and evaluation]
+DIFFICULTY: [difficulty level of this question, 1-5]
 
     Behavior guidelines:
     - Be supportive and encouraging, never say "wrong"
