@@ -63,7 +63,7 @@ function stopListening() {
     setIsListening(false);
 }
     function parseAIMessage(content){
-    const feedbackMatch = content.match(/FEEDBACK:\s*(.+?)(?=MODEL_ANSWER:|QUESTION:|$)/s);
+    const feedbackMatch = content.match(/FEEDBACK:\s*(.+?)(?=MODEL_ANSWER:|MISSING_CONCEPTS:|QUESTION:|$)/s);
     const modelAnswerMatch = content.match(/MODEL_ANSWER:\s*(.+?)(?=MISSING_CONCEPTS:|QUESTION:|$)/s);
     const missingMatch = content.match(/MISSING_CONCEPTS:\s*(.+?)(?=QUESTION:|$)/s);
     const questionMatch = content.match(/QUESTION:\s*(.+?)(?=DIFFICULTY:|$)/s);
@@ -73,7 +73,13 @@ function stopListening() {
     const missingConcepts = missingMatch ? missingMatch[1].trim() : '';
     const question = questionMatch ? questionMatch[1].trim() : content;
     
-    return { feedback, modelAnswer, missingConcepts, question };
+    // Filter out empty or placeholder values
+    return { 
+        feedback: feedback && !feedback.includes('MODEL_ANSWER') ? feedback : '',
+        modelAnswer: modelAnswer && !modelAnswer.includes('MISSING_CONCEPTS') ? modelAnswer : '',
+        missingConcepts,
+        question 
+    };
 }
     return(
         <div className="min-h-screen bg-gray-100 flex flex-col">
