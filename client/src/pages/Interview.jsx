@@ -63,12 +63,18 @@ function stopListening() {
     setIsListening(false);
 }
     function parseAIMessage(content){
-        const feedbackMatch = content.match(/FEEDBACK: \s*(.+?)(?=QUESTION:|$)/s);
-        const questionMatch = content.match(/QUESTION:\s*(.+?)(?=DIFFICULTY:|$)/s);
-        const feedback = feedbackMatch ? feedbackMatch[1].trim() : '';
-        const question = questionMatch ? questionMatch[1].trim() : content;
-    return { feedback, question };
-    }
+    const feedbackMatch = content.match(/FEEDBACK:\s*(.+?)(?=MODEL_ANSWER:|QUESTION:|$)/s);
+    const modelAnswerMatch = content.match(/MODEL_ANSWER:\s*(.+?)(?=MISSING_CONCEPTS:|QUESTION:|$)/s);
+    const missingMatch = content.match(/MISSING_CONCEPTS:\s*(.+?)(?=QUESTION:|$)/s);
+    const questionMatch = content.match(/QUESTION:\s*(.+?)(?=DIFFICULTY:|$)/s);
+    
+    const feedback = feedbackMatch ? feedbackMatch[1].trim() : '';
+    const modelAnswer = modelAnswerMatch ? modelAnswerMatch[1].trim() : '';
+    const missingConcepts = missingMatch ? missingMatch[1].trim() : '';
+    const question = questionMatch ? questionMatch[1].trim() : content;
+    
+    return { feedback, modelAnswer, missingConcepts, question };
+}
     return(
         <div className="min-h-screen bg-gray-100 flex flex-col">
             <div className="bg-white shadow p-4 flex justify-between items-center sticky top-0 z-10">
