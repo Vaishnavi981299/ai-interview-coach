@@ -62,6 +62,8 @@ const [companyUploading, setCompanyUploading] = useState(false);
         <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
                 <h1 className="text-4xl font-bold text-gray-800 mb-2">AI Interview Coach</h1>
+                    
+                <p className="text-gray-500 text-lg">Choose your interview type to get started</p>
                     <div className="flex justify-end mb-4">
     <button
         onClick={() => navigate('/history')}
@@ -70,7 +72,6 @@ const [companyUploading, setCompanyUploading] = useState(false);
         View History →
     </button>
 </div>
-                <p className="text-gray-500 text-lg">Choose your interview type to get started</p>
             </div>
             <div className="grid grid-cols-2 gap-6">
                 {[
