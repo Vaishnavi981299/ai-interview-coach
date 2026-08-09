@@ -11,5 +11,6 @@ const sessionSchema = new mongoose.Schema({
         }
     ],
     createdAt: {type: Date, default: Date.now}
+    finalScore: { type: Number, default: null }
 });
 module.exports = mongoose.model('Session', sessionSchema);
