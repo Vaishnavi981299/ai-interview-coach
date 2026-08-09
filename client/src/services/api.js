@@ -18,3 +18,4 @@ export const startResumeSession = (formData) => API.post('/interview/resume', fo
     headers: {'Content-type': 'multipart/form-data'}
 });
 export const getSessions = () => API.get('/interview/sessions');
+export const completeSession = (data) => API.post('/interview/complete', data);
