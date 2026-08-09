@@ -83,11 +83,11 @@ function History() {
                                     </p>
                                 </div>
                                 <div className="text-right">
-                                    <p className={`text-2xl font-bold ${getScoreColor(session.difficulty)}`}>
-                                        {session.difficulty}/5
-                                    </p>
-                                    <p className="text-gray-400 text-xs mt-1">difficulty reached</p>
-                                </div>
+    <p className={`text-2xl font-bold ${getScoreColor(session.finalScore || session.difficulty)}`}>
+        {session.finalScore ? `${session.finalScore}/5` : 'N/A'}
+    </p>
+    <p className="text-gray-400 text-xs mt-1">avg score</p>
+</div>
                             </div>
                         ))}
                     </div>
