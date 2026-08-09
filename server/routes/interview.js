@@ -72,4 +72,14 @@ router.post('/resume', getToken, upload.single('resume'), async(req, res) => {
     res.status(500).json({ message: error.message });
 }
 })
+router.get('/sessions', getToken, async(req, res) => {
+    try {
+        const sessions = await Session.find({ userId: req.user.userId })
+            .sort({ createdAt: -1 })
+            .select('type company difficulty createdAt');
+        res.status(200).json({ sessions });
+    } catch(error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 module.exports = router;
