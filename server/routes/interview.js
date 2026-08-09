@@ -76,7 +76,7 @@ router.get('/sessions', getToken, async(req, res) => {
     try {
         const sessions = await Session.find({ userId: req.user.userId })
             .sort({ createdAt: -1 })
-            .select('type company difficulty createdAt');
+            .select('type company difficulty finalScore createdAt')
         res.status(200).json({ sessions });
     } catch(error) {
         res.status(500).json({ message: error.message });
