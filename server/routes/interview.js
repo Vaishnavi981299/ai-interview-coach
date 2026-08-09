@@ -82,4 +82,16 @@ router.get('/sessions', getToken, async(req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+router.post('/complete', getToken, async(req, res) => {
+    try {
+        const { sessionId, finalScore } = req.body;
+        const session = await Session.findById(sessionId);
+        if(!session) return res.status(404).json({ message: 'Session not found' });
+        session.finalScore = finalScore;
+        await session.save();
+        res.status(200).json({ session });
+    } catch(error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 module.exports = router;
