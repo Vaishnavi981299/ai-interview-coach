@@ -17,3 +17,4 @@ export const getSession = (sessionId) => API.get(`/interview/session/${sessionId
 export const startResumeSession = (formData) => API.post('/interview/resume', formData, {
     headers: {'Content-type': 'multipart/form-data'}
 });
+export const getSessions = () => API.get('/interview/sessions');
